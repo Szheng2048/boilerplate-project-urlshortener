@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const webObject = { original_url : 'https://freeCodeCamp.org', short_url : 1}
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -20,9 +21,8 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post("/api/shorturl",(req,res)=>{
-  // const {original_url,short_url} = req.headers
-  // if()
-  res.json({message:req.headers.origin["url"]})
+  const {original_url,short_url} = webObject
+  res.json(original_url,short_url)
 })
 
 app.listen(port, function() {

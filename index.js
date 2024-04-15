@@ -26,33 +26,18 @@ app.get('/api/hello', function(req, res) {
 
 app.post("/api/shorturl/:url?",(req,res)=>{
   let validEmail = true
-  let original
-  let short
-  if(req.body.original_url !== undefined){
-    original = req.body.original_url
-  }
-  if(req.body.short_url !== undefined){
-    short = req.body.short_url
-  }
+  const {original_url,short_url} = req.body
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
     '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
-  // const urlPattern = new RegExp('(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?');
-  if(!req.params.url){
-    validEmail = !!urlPattern.test(original)
-    if(!validEmail){
-      res.json({error:"invalid url"})
-    } else {
-      urls.push({original_url:original,short_url:short})
-      res.json({original_url:original,short_url:short})
-    }
+  if(!!urlPattern.test(original_url)){
+    urls.push({original_url,short_url})
+    res.json({original_url,short_url})
   } else {
-    const filteredArr = urls.filter(url=> url.short_url === req.params.url)
-    const originalUrl = filteredArr.original_url
-    res.redirect(originalUrl)
+    res.json({error:"invalid url"})
   }
 })
 

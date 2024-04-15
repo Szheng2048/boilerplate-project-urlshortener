@@ -22,8 +22,14 @@ app.get('/api/hello', function(req, res) {
 
 app.post("/api/shorturl/:url?",(req,res)=>{
   const validEmail = true
-  let original = req.body.original_url
-  let short = req.body.short_url
+  let original
+  let short
+  if(req.body.original_url){
+    let original = req.body.original_url
+  }
+  if(req.body.short_url){
+    let short = req.body.short_url
+  }
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address

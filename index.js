@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 const urls = []
 
@@ -8,6 +9,7 @@ const urls = []
 const port = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(express.json());
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
@@ -21,15 +23,16 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post("/api/shorturl/:url?",(req,res)=>{
-  const validEmail = true
+  let validEmail = true
   let original
   let short
-  if(req.body.original_url){
-    let original = req.body.original_url
+  if(req.body.original_url !== undefined){
+    original = req.body.original_url
   }
-  if(req.body.short_url){
-    let short = req.body.short_url
+  if(req.body.short_url !== undefined){
+    short = req.body.short_url
   }
+  console.log(urls)
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address

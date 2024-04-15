@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const logger = require("morgan");
 const bodyParser = require('body-parser');
 const app = express();
 const urls = []
@@ -10,6 +11,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(logger("dev"))
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
@@ -32,13 +34,13 @@ app.post("/api/shorturl/:url?",(req,res)=>{
   if(req.body.short_url !== undefined){
     short = req.body.short_url
   }
-  console.log(urls)
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
     '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+  // const urlPattern = new RegExp('(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?');
   if(!req.params.url){
     validEmail = !!urlPattern.test(original)
     if(!validEmail){

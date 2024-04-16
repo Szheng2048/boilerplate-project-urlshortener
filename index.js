@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const logger = require("morgan");
 const bodyParser = require('body-parser');
+const uuid = require("uuid").v4
 const app = express();
 const urls = []
 const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
@@ -47,16 +48,17 @@ app.get("/api/shorturl/:url",(req,res)=>{
 })
 app.post("/api/shorturl",(req,res)=>{
   console.log(49,req)
-  const {original_url,short_url} = req.body
+  const {url} = req.body
+  const short = uuid()
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
     '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
-  if(!!urlPattern.test(original_url)){
-    urls.push({original_url,short_url})
-    res.json({original_url,short_url})
+  if(!!urlPattern.test(url)){
+    urls.push({original_url:url,short_url:short})
+    res.json({original_url:url,short_url:short})
   } else {
     res.json({error:"invalid url"})
   }

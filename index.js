@@ -5,6 +5,7 @@ const logger = require("morgan");
 const bodyParser = require('body-parser');
 const app = express();
 const urls = []
+let count = 0
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -24,22 +25,33 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.post("/api/shorturl/:url?",(req,res)=>{
+app.get("/api/shorturl/:url",(req,res)=>{
+  const {url} = req.params
+  const foundUrl = urls.filter(uR => uR.short_url === url)
+  res.redirect(foundUrl.original_url).json({message:"successfully redirected"})
+  // let foundUrl = urls.filter(find=>find.short_url === req.params.url)
+  // res.end({message:"succesful"})
+  // res.redirect(foundUrl.original_url)
+})
+app.post("/api/shorturl",(req,res)=>{
   let validEmail = true
-  const {original_url,short_url} = req.body
+  console.log(urls)
+  const {url} = req.body
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
     '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
-  if(!!urlPattern.test(original_url)){
-    urls.push({original_url,short_url})
-    res.json({original_url,short_url})
+  if(!!urlPattern.test(url)){
+    urls.push({original_url:url,short_url:count})
+    count++
+    res.json({original_url:url,short_url:count})
   } else {
     res.json({error:"invalid url"})
   }
 })
+
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);

@@ -33,9 +33,9 @@ app.get('/api/hello', function(req, res) {
 
 app.get("/api/shorturl/:url",(req,res)=>{
   const {url} = req.params
-  console.log(urls,url)
+  console.log(36,urls,url)
   const foundUrl = urls.find(searchurl => searchurl.short_url === url)
-  console.log(foundUrl)
+  console.log(38,foundUrl)
   if(!foundUrl){
     res.json({error:"invalid url"})
   }else {
@@ -46,7 +46,7 @@ app.get("/api/shorturl/:url",(req,res)=>{
   // res.redirect(foundUrl.original_url)
 })
 app.post("/api/shorturl",(req,res)=>{
-  console.log(req.body)
+  console.log(49,req.body)
   const {original_url,short_url} = req.body
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name

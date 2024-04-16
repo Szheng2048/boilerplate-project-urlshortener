@@ -6,6 +6,13 @@ const bodyParser = require('body-parser');
 const app = express();
 const urls = []
 let count = 0
+const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -34,19 +41,18 @@ app.get("/api/shorturl/:url",(req,res)=>{
   // res.redirect(foundUrl.original_url)
 })
 app.post("/api/shorturl",(req,res)=>{
-  let validEmail = true
-  console.log(urls)
-  const {url} = req.body
-	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
-    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
-  if(!!urlPattern.test(url)){
-    urls.push({original_url:url,short_url:count})
+  console.log(req.body)
+  const {URL} = req.body
+	// const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+  //   '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+  //   '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+  //   '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+  //   '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+  //   '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+  if(!!urlPattern.test(URL)){
+    urls.push({original_url:URL,short_url:count})
     count++
-    res.json({original_url:url,short_url:count})
+    res.json({original_url:URL,short_url:count})
   } else {
     res.json({error:"invalid url"})
   }

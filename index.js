@@ -46,7 +46,7 @@ app.get("/api/shorturl/:url",(req,res)=>{
   // res.redirect(foundUrl.original_url)
 })
 app.post("/api/shorturl",(req,res)=>{
-  console.log(49,req.body)
+  console.log(49,req)
   const {original_url,short_url} = req.body
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name

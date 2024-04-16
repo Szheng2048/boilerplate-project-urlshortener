@@ -28,7 +28,7 @@ app.get('/api/hello', function(req, res) {
 app.get("/api/shorturl/:url",(req,res)=>{
   const {url} = req.params
   const foundUrl = urls.filter(uR => uR.short_url === url)
-  res.redirect(foundUrl.original_url).json({message:"successfully redirected"})
+  res.redirect(foundUrl.original_url)
   // let foundUrl = urls.filter(find=>find.short_url === req.params.url)
   // res.end({message:"succesful"})
   // res.redirect(foundUrl.original_url)

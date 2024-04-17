@@ -47,7 +47,6 @@ app.get("/api/shorturl/:url",(req,res)=>{
   // res.redirect(foundUrl.original_url)
 })
 app.post("/api/shorturl",(req,res)=>{
-  console.log(49,req)
   const {url} = req.body
   const short = uuid()
 	const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
